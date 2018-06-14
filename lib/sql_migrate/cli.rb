@@ -13,14 +13,14 @@ module SqlMigrate
     end
 
     def initialize
-      @config = ::SqlMigrate::Config.new
+      @config = Config.new
     end
 
     def parse(argv)
       args = argv.dup
       options = {}
       OptionParser.new do |opt|
-        opt.version = ::SqlMigrate::VERSION
+        opt.version = VERSION
         opt.banner = "sql_migrate [options]"
         opt.on("-f CONFIG", "config file.") { |v| options[:config] = v }
         opt.parse!(args)
@@ -33,7 +33,8 @@ module SqlMigrate
     end
 
     def execute
-      puts "run!!"
+      migrator = Migrator.new(config)
+      migrator.migrate
     end
 
     private
