@@ -12,13 +12,17 @@ module SqlMigrate
       create_migrate_versions_if_not_exist
       versions = applied_versions
       migration_files.sort.each do |migration|
-        next if versions.include?(migration)
+        version_name = File.basename(migration)
+        puts "======================================"
+        puts version_name
+        next if versions.include?(version_name)
         sql_text = File.read(migration)
         sql_text.split(";").each do |sql|
           next if sql.strip.empty?
+          puts sql
           connection.query(sql)
         end
-        connection.query("insert into #{VERSION_TABLE_NAME} (`version`) values (\"#{migration}\")")
+        connection.query("insert into #{VERSION_TABLE_NAME} (`version`) values (\"#{version_name}\")")
       end
     end
 
