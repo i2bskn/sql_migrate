@@ -28,6 +28,7 @@ module SqlMigrate
 
       load_from_config(options.delete(:config)) if options.has_key?(:config)
       config.merge(options)
+      config.migrations_path = args.first if args.size.positive?
 
       args
     end
@@ -40,7 +41,7 @@ module SqlMigrate
     private
 
       def load_from_config(path)
-        path = File.exapnd_path(path)
+        path = File.expand_path(path)
         yaml = YAML.load_file(path)
         config.merge(yaml)
       end

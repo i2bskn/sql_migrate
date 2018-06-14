@@ -3,8 +3,10 @@ module SqlMigrate
     VALID_OPTIONS = [
       :host,
       :port,
+      :database,
       :user,
       :password,
+      :migrations_path,
     ].freeze
 
     attr_accessor *VALID_OPTIONS
@@ -24,6 +26,7 @@ module SqlMigrate
       self.host = "localhost"
       self.port = 3306
       self.user = "root"
+      self.migrations_path = "migrations"
     end
   end
 end
