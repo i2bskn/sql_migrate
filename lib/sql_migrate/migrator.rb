@@ -1,11 +1,12 @@
 module SqlMigrate
   class Migrator
-    attr_accessor :config
+    attr_accessor :config, :logger
 
     VERSION_TABLE_NAME = "migrate_versions".freeze
 
-    def initialize(config = nil)
+    def initialize(config: nil, logger: nil)
       @config = config || Config.new
+      @logger = logger || Logger.new(STDOUT)
     end
 
     def migrate
@@ -13,16 +14,22 @@ module SqlMigrate
       versions = applied_versions
       migration_files.sort.each do |migration|
         version_name = File.basename(migration)
-        puts "======================================"
-        puts version_name
         next if versions.include?(version_name)
-        sql_text = File.read(migration)
-        sql_text.split(";").each do |sql|
-          next if sql.strip.empty?
-          puts sql
-          connection.query(sql)
+        logger.info("apply migration #{version_name}")
+        begin
+          connection.query("begin")
+          migration_queries = File.read(migration)
+          migration_queries.split(";").each do |sql|
+            next if sql.strip.empty?
+            logger.info("execute sql:\n#{sql}")
+            connection.query(sql)
+          end
+          connection.query("insert into #{VERSION_TABLE_NAME} (`version`) values (\"#{version_name}\")")
+          connection.query("commit")
+        rescue => e
+          logger.info("migration failed[#{version_name}]: #{e.message}")
+          connection.query("rollback")
         end
-        connection.query("insert into #{VERSION_TABLE_NAME} (`version`) values (\"#{version_name}\")")
       end
     end
 
@@ -34,6 +41,8 @@ module SqlMigrate
             PRIMARY KEY (`version`)
           ) ENGINE=InnoDB DEFAULT CHARSET=utf8
         EOS
+        logger.info("create #{VERSION_TABLE_NAME}")
+        logger.info("execute sql:\n#{sql}")
         connection.query(sql)
       end
     end

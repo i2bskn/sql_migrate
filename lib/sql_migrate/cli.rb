@@ -34,7 +34,7 @@ module SqlMigrate
     end
 
     def execute
-      migrator = Migrator.new(config)
+      migrator = Migrator.new(config: config)
       migrator.migrate
     end
 
