@@ -8,6 +8,8 @@ module SqlMigrate
       :password,
       :migrations_path,
       :logger,
+      :dryrun,
+      :verbose,
     ].freeze
 
     attr_accessor *VALID_OPTIONS
@@ -28,7 +30,19 @@ module SqlMigrate
       self.port = 3306
       self.user = "root"
       self.migrations_path = "migrations"
-      self.logger = Logger.new(STDOUT)
+      self.logger = default_logger
+      self.dryrun = false
+      self.verbose = false
     end
+
+    private
+
+      def default_logger
+        logger = Logger.new(STDOUT)
+        logger.formatter = proc { |severity, datetime, progname, message|
+          "#{datetime.strftime('%F %H:%M:%S.%N')}\t#{severity}\t#{message}\n"
+        }
+        logger
+      end
   end
 end

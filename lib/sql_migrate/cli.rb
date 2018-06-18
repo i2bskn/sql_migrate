@@ -22,6 +22,8 @@ module SqlMigrate
       OptionParser.new do |opt|
         opt.version = VERSION
         opt.banner = "sql_migrate [options]"
+        opt.on("-v", "--verbose") { |v| options[:verbose] = v }
+        opt.on("-n", "--dry-run") { |v| options[:dryrun] = v }
         opt.on("-f CONFIG", "config file.") { |v| options[:config] = v }
         opt.parse!(args)
       end

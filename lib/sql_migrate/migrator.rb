@@ -18,13 +18,9 @@ module SqlMigrate
         version_name = File.basename(migration)
         next if versions.include?(version_name)
         logger.info("apply migration #{version_name}")
-        migration_queries = File.read(migration)
-        migration_queries.split(";").each do |sql|
-          next if sql.strip.empty?
-          logger.info("execute sql:\n#{sql}")
-          connection.query(sql)
-        end
-        connection.query("insert into #{VERSION_TABLE_NAME} (`version`) values (\"#{version_name}\")")
+        queries_from_migration_file(migration).each { |sql| execute(sql) }
+        sql = "insert into #{VERSION_TABLE_NAME} (`version`) values (\"#{version_name}\")"
+        execute(sql)
       end
     end
 
@@ -37,7 +33,6 @@ module SqlMigrate
           ) ENGINE=InnoDB DEFAULT CHARSET=utf8
         EOS
         logger.info("create #{VERSION_TABLE_NAME}")
-        logger.info("execute sql:\n#{sql}")
         connection.query(sql)
       end
     end
@@ -55,6 +50,20 @@ module SqlMigrate
     end
 
     private
+
+      def execute(sql)
+        logger.info("execute sql:\n#{sql}") if config.verbose
+        connection.query(sql) unless dryrun?
+      end
+
+      def queries_from_migration_file(path)
+        migration_text = File.read(path)
+        migration_text.split(";").map(&:strip).reject(&:empty?)
+      end
+
+      def dryrun?
+        !!config.dryrun
+      end
 
       def connection
         @connection ||= Mysql2::Client.new(**db_options)
