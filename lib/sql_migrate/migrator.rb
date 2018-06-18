@@ -1,12 +1,14 @@
 module SqlMigrate
   class Migrator
-    attr_accessor :config, :logger
+    extend Forwardable
+
+    attr_accessor :config
+    def_delegator :config, :logger
 
     VERSION_TABLE_NAME = "migrate_versions".freeze
 
-    def initialize(config: nil, logger: nil)
+    def initialize(config = nil)
       @config = config || Config.new
-      @logger = logger || Logger.new(STDOUT)
     end
 
     def migrate
@@ -16,20 +18,13 @@ module SqlMigrate
         version_name = File.basename(migration)
         next if versions.include?(version_name)
         logger.info("apply migration #{version_name}")
-        begin
-          connection.query("begin")
-          migration_queries = File.read(migration)
-          migration_queries.split(";").each do |sql|
-            next if sql.strip.empty?
-            logger.info("execute sql:\n#{sql}")
-            connection.query(sql)
-          end
-          connection.query("insert into #{VERSION_TABLE_NAME} (`version`) values (\"#{version_name}\")")
-          connection.query("commit")
-        rescue => e
-          logger.info("migration failed[#{version_name}]: #{e.message}")
-          connection.query("rollback")
+        migration_queries = File.read(migration)
+        migration_queries.split(";").each do |sql|
+          next if sql.strip.empty?
+          logger.info("execute sql:\n#{sql}")
+          connection.query(sql)
         end
+        connection.query("insert into #{VERSION_TABLE_NAME} (`version`) values (\"#{version_name}\")")
       end
     end
 

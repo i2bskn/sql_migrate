@@ -7,6 +7,7 @@ module SqlMigrate
       :user,
       :password,
       :migrations_path,
+      :logger,
     ].freeze
 
     attr_accessor *VALID_OPTIONS
@@ -27,6 +28,7 @@ module SqlMigrate
       self.port = 3306
       self.user = "root"
       self.migrations_path = "migrations"
+      self.logger = Logger.new(STDOUT)
     end
   end
 end

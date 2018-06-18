@@ -1,3 +1,4 @@
+require "forwardable"
 require "logger"
 require "mysql2"
 require "sql_migrate/version"
