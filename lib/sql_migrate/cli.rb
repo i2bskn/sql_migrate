@@ -21,16 +21,26 @@ module SqlMigrate
       options = {}
       OptionParser.new do |opt|
         opt.version = VERSION
-        opt.banner = "sql_migrate [options]"
+        opt.banner = "sql_migrate [options] MIGRATIONS_PATH"
+        opt.on("-h HOST")         { |v| options[:host] = v }
+        opt.on("-p PORT")         { |v| options[:port] = v }
+        opt.on("-d DATABASE")     { |v| options[:database] = v }
+        opt.on("-u USER")         { |v| options[:user] = v }
+        opt.on("-p PASSWORD")     { |v| options[:password] = v }
         opt.on("-v", "--verbose") { |v| options[:verbose] = v }
         opt.on("-n", "--dry-run") { |v| options[:dryrun] = v }
-        opt.on("-f CONFIG", "config file.") { |v| options[:config] = v }
+        opt.on("-f CONFIG")       { |v| options[:config] = v }
         opt.parse!(args)
+        unless args.size.positive?
+          STDERR << "required MIGRATIONS_PATH\n"
+          STDERR << "#{opt.banner}\n"
+          exit(1)
+        end
       end
 
       load_from_config(options.delete(:config)) if options.has_key?(:config)
       config.merge(options)
-      config.migrations_path = args.first if args.size.positive?
+      config.migrations_path = args.first
 
       args
     end
