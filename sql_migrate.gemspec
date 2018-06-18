@@ -12,6 +12,7 @@ Gem::Specification.new do |spec|
   spec.summary       = %q{Schema Migration utilities for MySQL.}
   spec.description   = %q{Schema Migration utilities for MySQL.}
   spec.homepage      = "https://github.com/i2bskn/sql_migrate"
+  spec.license       = "MIT"
 
   spec.files         = `git ls-files -z`.split("\x0").reject do |f|
     f.match(%r{^(test|spec|features)/})
