@@ -1,28 +1,29 @@
 # SqlMigrate
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/sql_migrate`. To experiment with that code, run `bin/console` for an interactive prompt.
-
-TODO: Delete this and the text above, and describe your gem
-
 ## Installation
 
-Add this line to your application's Gemfile:
-
-```ruby
-gem 'sql_migrate'
 ```
-
-And then execute:
-
-    $ bundle
-
-Or install it yourself as:
-
-    $ gem install sql_migrate
+$ gem install sql_migrate
+```
 
 ## Usage
 
-TODO: Write usage instructions here
+```
+sql_migrate -h mysql.example.com -d dbname path/to/migrations
+```
+
+### Options
+
+```
+sql_migrate [options] MIGRATIONS_PATH
+    -h HOST
+    -d DATABASE
+    -u USER
+    -p PASSWORD
+    -v, --verbose
+    -n, --dry-run
+    -f CONFIG
+```
 
 ## Development
 
