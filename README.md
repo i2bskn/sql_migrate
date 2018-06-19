@@ -9,7 +9,12 @@ $ gem install sql_migrate
 ## Usage
 
 ```
-sql_migrate -h mysql.example.com -d dbname path/to/migrations
+$ tree path/to/migrations
+migrations
+├── 0001_xxxx.sql
+├── 0002_xxxx.sql
+└── 0003_xxxx.sql
+$ MYSQL_PWD=secret sql_migrate -h mysql.example.com -d dbname path/to/migrations
 ```
 
 ### Options
