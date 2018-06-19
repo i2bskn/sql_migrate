@@ -6,7 +6,7 @@ module SqlMigrate
       :database,
       :user,
       :password,
-      :migrations_path,
+      :migrations_paths,
       :logger,
       :dryrun,
       :verbose,
@@ -29,7 +29,7 @@ module SqlMigrate
       self.host = "localhost"
       self.port = 3306
       self.user = "root"
-      self.migrations_path = "migrations"
+      self.migrations_paths = ["migrations"]
       self.logger = default_logger
       self.dryrun = false
       self.verbose = false

@@ -14,7 +14,7 @@ module SqlMigrate
     def migrate
       create_migrate_versions_if_not_exist
       versions = applied_versions
-      migration_files.sort.each do |migration|
+      migration_files.each do |migration|
         version_name = File.basename(migration)
         next if versions.include?(version_name)
         logger.info("apply migration #{version_name}")
@@ -46,7 +46,9 @@ module SqlMigrate
     end
 
     def migration_files
-      Dir.glob(File.join(config.migrations_path, "*"))
+      config.migration_paths.map { |path|
+        Dir.glob(File.join(File.expand_path(path), "*"))
+      }.flatten.sort
     end
 
     private
