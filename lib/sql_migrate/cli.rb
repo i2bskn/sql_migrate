@@ -35,7 +35,7 @@ module SqlMigrate
 
       load_from_config(options.delete(:config)) if options.has_key?(:config)
       config.merge(options)
-      config.migrations_paths = args unless args.empty?
+      config.migration_paths = args unless args.empty?
 
       args
     end
