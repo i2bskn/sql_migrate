@@ -28,7 +28,7 @@ module SqlMigrate
       unless table_names.include?(VERSION_TABLE_NAME)
         sql = <<-EOS
           create table `#{VERSION_TABLE_NAME}` (
-            `version` varchar(256),
+            `version` varchar(128),
             PRIMARY KEY (`version`)
           ) ENGINE=InnoDB DEFAULT CHARSET=utf8
         EOS
