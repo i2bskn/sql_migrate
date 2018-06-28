@@ -10,6 +10,7 @@ module SqlMigrate
       :logger,
       :dryrun,
       :verbose,
+      :applied,
     ].freeze
 
     attr_accessor *VALID_OPTIONS
@@ -33,6 +34,7 @@ module SqlMigrate
       self.logger = default_logger
       self.dryrun = false
       self.verbose = false
+      self.applied = false
     end
 
     private

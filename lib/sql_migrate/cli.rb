@@ -22,14 +22,15 @@ module SqlMigrate
       OptionParser.new do |opt|
         opt.version = VERSION
         opt.banner = "sql_migrate [options] MIGRATIONS_PATH"
-        opt.on("-h HOST")         { |v| options[:host] = v }
-        opt.on("-p PORT")         { |v| options[:port] = v }
+        opt.on("-h HOST")         { |v| options[:host]     = v }
+        opt.on("-p PORT")         { |v| options[:port]     = v }
         opt.on("-d DATABASE")     { |v| options[:database] = v }
-        opt.on("-u USER")         { |v| options[:user] = v }
+        opt.on("-u USER")         { |v| options[:user]     = v }
         opt.on("-p PASSWORD")     { |v| options[:password] = v }
-        opt.on("-v", "--verbose") { |v| options[:verbose] = v }
-        opt.on("-n", "--dry-run") { |v| options[:dryrun] = v }
-        opt.on("-f CONFIG")       { |v| options[:config] = v }
+        opt.on("-v", "--verbose") { |v| options[:verbose]  = v }
+        opt.on("-n", "--dry-run") { |v| options[:dryrun]   = v }
+        opt.on("--applied")       { |v| options[:applied]  = v }
+        opt.on("-f CONFIG")       { |v| options[:config]   = v }
         opt.parse!(args)
       end
 

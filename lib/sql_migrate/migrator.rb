@@ -17,8 +17,10 @@ module SqlMigrate
       migration_files.each do |migration|
         version_name = File.basename(migration)
         next if versions.include?(version_name)
-        logger.info("apply migration #{version_name}")
-        queries_from_migration_file(migration).each { |sql| execute(sql) }
+        unless config.applied
+          logger.info("apply migration #{version_name}")
+          queries_from_migration_file(migration).each { |sql| execute(sql) }
+        end
         sql = "insert into #{VERSION_TABLE_NAME} (`version`) values (\"#{version_name}\")"
         execute(sql)
       end
