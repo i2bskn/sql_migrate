@@ -14,12 +14,16 @@ migrations
 ├── 0001_xxxx.sql
 ├── 0002_xxxx.sql
 └── 0003_xxxx.sql
-$ MYSQL_PWD=secret sql_migrate -h mysql.example.com -d dbname path/to/migrations
+$ export MYSQL_PWD=secret
+$ sql_migrate -h mysql.example.com -u root -v -n -d dbname path/to/migrations        # dry run
+$ sql_migrate -h mysql.example.com -u root -v --applied -d dbname path/to/migrations # make it applied
+$ sql_migrate -h mysql.example.com -u root -v -d dbname path/to/migrations           # apply migrations
 ```
 
 ### Options
 
 ```
+$ sql_migrate --help
 sql_migrate [options] MIGRATIONS_PATH
     -h HOST
     -d DATABASE
@@ -27,6 +31,7 @@ sql_migrate [options] MIGRATIONS_PATH
     -p PASSWORD
     -v, --verbose
     -n, --dry-run
+        --applied
     -f CONFIG
 ```
 
